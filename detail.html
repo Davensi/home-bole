@@ -105,33 +105,35 @@
         let { id } = obj;
         console.log(obj, 'id');
         let res = await $.get(`http://127.0.0.1:4000/api/geTitemAite`, { id });
-        if (res.length == 0) {
-            alert('没有数据了兄弟')
-            // layer.msg('数据么哦了')
-            return;
-        }
+        let {data,homeLocal} = res;
+       
         console.log(res, 'data');
 
         let artiListHtml = '';
-        $('#crumbs').html(`当前位置：<a href="/">首页</a> / 所有分类 / ${res[0].cate_name}`)
-        res.forEach(item => {
+       
+        // console.log(data[0].title);
+		// $('#crumbs').html(`当前位置：<a href="/">首页</a> / 所有分类 / ${data[0].cate_name}`)
+        data.forEach(item => {
 
             let { username, title, content, cate_name, pic, add_date, id, cate_id } = item;
             // logo.jpg
-            pic = pic ? pic : '/static/image/logo.jpg';
+            pic = pic ? `${homeLocal}${pic}` : '/static/image/logo.jpg';
             artiListHtml += `
             <h1 style="text-align:center;"><b >${title}</b></h1>
             <div style="text-align:center;">
                  作者<b>${username}</b> 发布时间:<i>${add_date} </i>
             </div>
             <div style="text-align:center ; margin-top: 20px;">
+               <img src="${pic}"> 
+            </div>
+            <div style="text-align:center ; margin-top: 20px;">
                 ${content}
             </div>
             `
 
-            // <a href=""></a>
+            
         });
-        // console.log(oldHtml);
+         
         $('.content').html(artiListHtml)
     }
     getArticle()

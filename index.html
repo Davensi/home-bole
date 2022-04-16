@@ -63,17 +63,17 @@
 				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
 					<ul class="nav navbar-nav navbar-right">
-						<li><a href="#">首页</a></li>
+						<li><a href="/">首页</a></li>
 						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+							<a href="/" class="dropdown-toggle" data-toggle="dropdown" role="button"
 								aria-haspopup="true" aria-expanded="false">分类 <span class="caret"></span></a>
 							<ul class="dropdown-menu" id="cate">
 								<!-- <li><a href="/cate.html?id=2">html</a></li> -->
 
 							</ul>
 						</li>
-						<li><a href="/tags.html">标签</a></li>
-						<li><a href="/about.html">关于我</a></li>
+						<li><a href="/">标签</a></li>
+						<li><a href="/">关于我</a></li>
 					</ul>
 				</div><!-- /.navbar-collapse -->
 			</div><!-- /.container-fluid -->
@@ -104,18 +104,20 @@
 	let pages = 1;
 	function getAite(limit, page) {
 		$.get('http://127.0.0.1:4000/api/getAite', { limit, page }).then(res => {
-			console.log(res[1]);
-			if (res.length == 0) {
+			let {data,homeLocal} = res;
+			console.log(res);
+			if (data.length == 0) {
 				alert('没有数据了兄弟')
 				// layer.msg('数据么哦了')
 				return;
 			}
 			let artiListHtml = '';
-			res.forEach(item => {
+			
+			data.forEach(item => {
 				let { username, title, content, cate_name, pic, add_date, id, cate_id } = item;
 				// logo.jpg
 				
-				pic = pic ? pic : '/static/image/logo.jpg';
+				pic = pic ? `${homeLocal}${pic}` : '/static/image/logo.jpg';
 				artiListHtml += `<div class='item row'>
 					<div class="col-md-2">
 						<img src="${pic}" alt="">
