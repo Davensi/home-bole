@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/css/base.css">
+    <style>
+        .crumbs {
+            font-size: 14px;
+            color: #ccc;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/" style="display:flex;">
+                    文西的博客
+                    </a>
+                </div>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+                    <ul class="nav navbar-nav navbar-right" id="cate">
+                        <li><a href="/">首页</a></li>
+                        <!-- <li><a href="/">分类</a></li> -->
+                        <li><a href="/">标签</a></li>
+                        <li><a href="/">关于</a></li>
+                        <li class="dropdown">
+                            <a href="/" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                                aria-haspopup="true" aria-expanded="false">其他 <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/">后台</a></li>
+                                <li><a href="/">Another action</a></li>
+                                <li><a href="/">Something else here</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="/">Separated link</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div><!-- /.navbar-collapse -->
+            </div><!-- /.container-fluid -->
+        </nav>
+        <div>
+
+        </div>
+        <div style="text-align:center;">
+
+        </div>
+        <div class="content">
+
+            <h1 style="text-align:center;"><b id="u2fid">CBA开战</b></h1>
+            <div>
+                <h1><b></b></h1>
+            </div>
+            <div style="text-align:center;">
+
+            </div>
+
+
+           
+
+        </div> <p style="text-align:center;">
+                <font color="#1c487f">友情链接</font>
+            </p>
+        <hr>
+        <div class="footer" style="text-align:center;font-size: 14px; color: #999;margin:10px 0;">
+            首页 | 主站 | GitHub | Powered by hexo | Theme xoxo
+        </div>
+    </div>
+</body>
+<script src="/static/js/jquery.js"></script>
+<script src="/static/bootstrap/js/bootstrap.min.js"></script>
+
+<script>
+    let limit = 1;
+
+    async function getArticle() {
+        var url = decodeURI(window.location.href);
+        var args = url.split('?');
+        if (args[0] === url) return false;
+        var arr = args[1].split('&');
+        var obj = {};
+        for (var i = 0; i < arr.length; i++) {
+            var arg = arr[i].split('=');
+            obj[arg[0]] = arg[1];
+
+        }
+        let { id } = obj;
+        console.log(obj, 'id');
+        let res = await $.get(`http://127.0.0.1:4000/api/geTitemAite`, { id });
+        if (res.length == 0) {
+            alert('没有数据了兄弟')
+            // layer.msg('数据么哦了')
+            return;
+        }
+        console.log(res, 'data');
+
+        let artiListHtml = '';
+        $('#crumbs').html(`当前位置：<a href="/">首页</a> / 所有分类 / ${res[0].cate_name}`)
+        res.forEach(item => {
+
+            let { username, title, content, cate_name, pic, add_date, id, cate_id } = item;
+            // logo.jpg
+            pic = pic ? pic : '/static/image/logo.jpg';
+            artiListHtml += `
+            <h1 style="text-align:center;"><b >${title}</b></h1>
+            <div style="text-align:center;">
+                 作者<b>${username}</b> 发布时间:<i>${add_date} </i>
+            </div>
+            <div style="text-align:center ; margin-top: 20px;">
+                ${content}
+            </div>
+            `
+
+            // <a href=""></a>
+        });
+        // console.log(oldHtml);
+        $('.content').html(artiListHtml)
+    }
+    getArticle()
+    
+</script>
+
+</html>

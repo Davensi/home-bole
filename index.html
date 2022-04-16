@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<link rel="stylesheet" href="/static/bootstrap/css/bootstrap.css">
+	<link rel="stylesheet" href="/static/css/base.css">
+	<style>
+		.content .item {
+			margin-top: 10px;
+			margin-bottom: 10px;
+		}
+
+		.content .item img {
+			width: 100%;
+			height: 100%;
+			box-shadow: 0px 0px 10px #ccc;
+
+		}
+
+		.content .item .title:hover {
+			text-decoration: underline;
+			cursor: pointer;
+		}
+
+
+		.content .item div:first-child:hover img {
+			opacity: 0.7;
+			cursor: pointer;
+			transition: all 0.3s ease-in-out;
+		}
+
+		.content .item .intro {
+			margin-top: 10px;
+			color: #ccc;
+			font-size: 14px;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container">
+		<nav class="navbar navbar-default">
+			<div class="container-fluid">
+				<!-- Brand and toggle get grouped for better mobile display -->
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+						data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="/" style="display:flex;">
+						文西的博客
+					</a>
+				</div>
+
+				<!-- Collect the nav links, forms, and other content for toggling -->
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+					<ul class="nav navbar-nav navbar-right">
+						<li><a href="#">首页</a></li>
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+								aria-haspopup="true" aria-expanded="false">分类 <span class="caret"></span></a>
+							<ul class="dropdown-menu" id="cate">
+								<!-- <li><a href="/cate.html?id=2">html</a></li> -->
+
+							</ul>
+						</li>
+						<li><a href="/tags.html">标签</a></li>
+						<li><a href="/about.html">关于我</a></li>
+					</ul>
+				</div><!-- /.navbar-collapse -->
+			</div><!-- /.container-fluid -->
+		</nav>
+
+		<div class="content">
+			<h4>最新文章</h4>
+			<div class="artlist" id="artiList">
+				 
+
+			</div>
+		</div>
+		<button type="button" id="getDataBtn" class="btn  btn-block">查看更多</button>
+		<hr>
+
+		<div class="footer" style="text-align:center;font-size: 14px; color: #999;margin:10px 0;">
+			首页 | 主站 | GitHub | created at 2020/02/4 | Powered by 文西
+		</div>
+	</div>
+</body>
+<script src="/static/js/jquery.js"></script>
+<script src="/static/bootstrap/js/bootstrap.min.js"></script>
+<script src="https://momentjs.bootcss.com/downloads/moment.min.js"></script>
+<!-- <script src="https://cdn.bootcdn.net/ajax/libs/layer/3.5.1/layer.js"></script> -->
+
+<script>
+	let limit = 1;
+	let pages = 1;
+	function getAite(limit, page) {
+		$.get('http://127.0.0.1:4000/api/getAite', { limit, page }).then(res => {
+			console.log(res[1]);
+			if (res.length == 0) {
+				alert('没有数据了兄弟')
+				// layer.msg('数据么哦了')
+				return;
+			}
+			let artiListHtml = '';
+			res.forEach(item => {
+				let { username, title, content, cate_name, pic, add_date, id, cate_id } = item;
+				// logo.jpg
+				
+				pic = pic ? pic : '/static/image/logo.jpg';
+				artiListHtml += `<div class='item row'>
+					<div class="col-md-2">
+						<img src="${pic}" alt="">
+					</div>
+					<div class="col-md-10">
+						<div class="date ">作者：${username} | ${moment(add_date).format('YY-MM-DD')}</div>
+						<div class="title"> 标题:<a href="/cate?cate_id=${cate_id}">${title}</a>...</div>
+						<a href="/detail?id=${id}">
+						<div class="cnotent" id="cnotent"> ${title}<br/>内容:${content}...</div>
+						</a> 
+					</div>
+					<hr>
+				</div>`
+
+				// <a href=""></a>
+			});
+			// console.log(oldHtml);
+			$('#artiList').html(artiListHtml)
+			let oldHtml = $('#artiList').html();
+			$('#artiList').html(oldHtml, artiListHtml)
+		})
+	}
+	getAite(limit, pages)
+	$('#getDataBtn').click(async function () {
+		pages++;
+		getAite(limit, pages)
+
+	});
+
+
+	async function getcateTag() {
+		// cate
+		$.get('http://127.0.0.1:4000/api/getcateTag').then(res => {
+			console.log(res);
+
+			let catetHtml = '';
+			res.forEach(item => {
+				let { cate_name, cate_id } = item;
+				// logo.jpg
+
+				catetHtml += `
+				<li><a href="/cate?cate_id=${cate_id}">${cate_name}</a></li>
+				`
+
+				// <a href=""></a>
+			});
+			// console.log(oldHtml);
+			$('#cate').html(catetHtml)
+		})
+
+	}
+	getcateTag()
+</script>
+
+</html>
