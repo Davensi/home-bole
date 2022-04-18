@@ -105,7 +105,7 @@
 	function getAite(limit, page) {
 		$.get('http://127.0.0.1:4000/api/getAite', { limit, page }).then(res => {
 			let {data,homeLocal} = res;
-			console.log(res);
+			console.log(data,'data');
 			if (data.length == 0) {
 				alert('没有数据了兄弟')
 				// layer.msg('数据么哦了')
@@ -135,9 +135,9 @@
 				// <a href=""></a>
 			});
 			// console.log(oldHtml);
-			$('#artiList').html(artiListHtml)
+			 
 			let oldHtml = $('#artiList').html();
-			$('#artiList').html(oldHtml, artiListHtml)
+			$('#artiList').append(artiListHtml)
 		})
 	}
 	getAite(limit, pages)

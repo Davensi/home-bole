@@ -155,11 +155,11 @@
 			// <a href=""></a>
 		});
 		// console.log(oldHtml);
-		$('#artiList').html(artiListHtml)
+		$('#artiList').append(artiListHtml)
 	}
 	getArticle()
 	$('#getDataBtn').click(async function () {
-		pages++;
+		++pages;
 		getArticle(limit, pages)
 
 	})
